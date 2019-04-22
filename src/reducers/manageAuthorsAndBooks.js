@@ -1,10 +1,16 @@
-export default function bookApp(state = {
-  authors: [],
-  books: []
-}, action) {
-  let idx
-  switch (action.type) {
+import { combineReducers } from "redux"
 
+const rootReducer = combineReducers({
+  authors: authorsReducer,
+  books: booksReducer
+})
+
+export default rootReducer
+
+function booksReducer(state = [], action) {
+  let idx
+  
+  switch (action.type) {
     case "ADD_BOOK":
       return {
         ...state,
@@ -20,24 +26,32 @@ export default function bookApp(state = {
           state.books.slice(idx + 1),
         ]
       };
+    default:
+      return state
+  }
+}
 
-    case "ADD_AUTHOR":
-        return {
-          ...state,
-          authors: [...state.authors, action.author]
-        };
+function authorsReducer(state = [], action) {
+  let idx
 
-    case "REMOVE_AUTHOR":
-      idx = state.authors.indexOf(action.id);
+  switch (action.type) {
+  case "ADD_AUTHOR":
       return {
         ...state,
-        authors: [
-          state.authors.slice(0, idx),
-          state.authors.slice(idx + 1)
-        ]
+        authors: [...state.authors, action.author]
       };
 
-    default:
-      return state;
-    }
+  case "REMOVE_AUTHOR":
+    idx = state.authors.indexOf(action.id);
+    return {
+      ...state,
+      authors: [
+        state.authors.slice(0, idx),
+        state.authors.slice(idx + 1)
+      ]
+    };
+
+  default:
+    return state;
+  }
 };
